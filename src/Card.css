@@ -1,0 +1,12 @@
+.myCard {
+    text-align: -webkit-center;
+
+
+}
+
+.myCard> :only-child {
+    border: 2px solid #FF5733;
+    margin-top: 20px;
+    border-radius: 12px;
+    text-align: justify;
+}
