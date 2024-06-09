@@ -1,7 +1,5 @@
 .myCard {
     text-align: -webkit-center;
-
-
 }
 
 .myCard> :only-child {
@@ -9,4 +7,27 @@
     margin-top: 20px;
     border-radius: 12px;
     text-align: justify;
+}
+
+.input {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.input>button {
+    background-color: #FF5733;
+    width: 150px;
+
+}
+
+.input>button:hover {
+    background-color: #FF5733;
+    box-shadow: "0 10px 12px #FF5733",
+
+}
+
+.inputfield {
+    border: #FF5733;
 }
