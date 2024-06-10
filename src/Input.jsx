@@ -2,9 +2,7 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import "./Card.css";
-
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 export const theme = createTheme({
   components: {
     MuiOutlinedInput: {
@@ -24,6 +22,7 @@ export const theme = createTheme({
   },
 });
 export default function ComboBox() {
+  const [city, setInputValue] = React.useState();
   return (
     <ThemeProvider theme={theme}>
       {" "}
@@ -37,13 +36,14 @@ export default function ComboBox() {
             {...params}
             label="Enter your city"
             variant="outlined"
+            value={city}
+            onChange={(e) => setInputValue(e.target.value)}
           />
         )}
       />
     </ThemeProvider>
   );
 }
-
 const cities = [
   { label: "New York" },
   { label: "Paris" },
