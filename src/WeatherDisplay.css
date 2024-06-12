@@ -1,0 +1,47 @@
+.weather-display {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.weather-display h2 {
+    margin-top: 0;
+}
+
+.weather-display p {
+    margin: 8px 0;
+}
+
+.weather-display strong {
+    font-weight: bold;
+}
+
+.default {
+    margin-top: 20px;
+}
+
+.default {
+    animation: fadeInOut 3s ease-in-out infinite alternate;
+    opacity: 0;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

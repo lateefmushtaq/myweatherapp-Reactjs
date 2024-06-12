@@ -1,42 +1,71 @@
 import * as React from "react";
-import { fetchData } from "./fetchData";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
+import SearchIcon from "@mui/icons-material/Search";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import "./Card.css";
-import ComboBox from "./Input";
+import QuikList from "./QuickLinks";
+import Input from "./Input";
+import WeatherDisplay from "./DisplayData";
 export default function MyCard() {
-  const [load, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [trigger, setTrigger] = React.useState(false);
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
+  const [input, setInput] = React.useState("");
   function handleClick() {
-    const city = "berlin";
-    fetchData({ city, setLoading, setData, setError });
-
-    console.log(load, data, error);
+    setTrigger(true);
   }
+  function onChange(e) {
+    setInput(e.target.value);
+    console.log(e.target.value);
+  }
+  React.useEffect(() => {
+    if (trigger === true && input) {
+      const URL = `https://api.openweathermap.org/data/2.5/weather?q=${input}&APPID=7f12b9f7637879bc79cddc5739293ac2`;
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(URL);
+          const data = await response.json();
+          setData(data);
+          setInput("");
+        } catch (e) {
+          setError(e);
+        } finally {
+          setLoading(false);
+          setTrigger(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [trigger, input]);
 
   return (
-    <div className="myCard">
-      <Card sx={{ maxWidth: 500 }}>
-        <CardContent>
-          <Typography sx={{ fontSize: 16 }} color="text.primary" gutterBottom>
-            Enter your city
-          </Typography>
-
-          <div className="input">
-            {" "}
-            <ComboBox />
-            <Button variant={"contained"} onClick={handleClick}>
+    <>
+      <QuikList />
+      <div className="myCard">
+        <Card sx={{ maxWidth: 500 }}>
+          <CardContent>
+            <div className="input">
               {" "}
-              Search{" "}
-            </Button>
-          </div>
-        </CardContent>
-        <CardActions></CardActions>
-      </Card>
-    </div>
+              <Input value={input} onChange={onChange} />
+              <Button
+                variant={"contained"}
+                onClick={handleClick}
+                startIcon={<SearchIcon />}
+              >
+                {" "}
+                Search{" "}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <div>
+        <WeatherDisplay data={data} loading={loading} error={error} />
+      </div>
+    </>
   );
 }

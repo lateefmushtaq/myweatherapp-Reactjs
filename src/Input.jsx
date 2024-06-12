@@ -1,6 +1,5 @@
 import * as React from "react";
 import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import "./Card.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 export const theme = createTheme({
@@ -21,48 +20,17 @@ export const theme = createTheme({
     },
   },
 });
-export default function ComboBox() {
-  const [city, setInputValue] = React.useState();
+export default function Input({ value, onChange }) {
   return (
     <ThemeProvider theme={theme}>
       {" "}
-      <Autocomplete
-        freeSolo
-        options={cities.map((city) => city.label)}
-        sx={{ width: 300 }}
-        renderInput={(params) => (
-          <TextField
-            className="inputfield"
-            {...params}
-            label="Enter your city"
-            variant="outlined"
-            value={city}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-        )}
+      <TextField
+        className="inputfield"
+        label="Enter your city"
+        variant="outlined"
+        value={value}
+        onChange={onChange}
       />
     </ThemeProvider>
   );
 }
-const cities = [
-  { label: "New York" },
-  { label: "Paris" },
-  { label: "Tokyo" },
-  { label: "London" },
-  { label: "Hong Kong" },
-  { label: "Dubai" },
-  { label: "Rome" },
-  { label: "Barcelona" },
-  { label: "Los Angeles" },
-  { label: "Bangkok" },
-  { label: "Singapore" },
-  { label: "Sydney" },
-  { label: "Istanbul" },
-  { label: "Moscow" },
-  { label: "Toronto" },
-  { label: "San Francisco" },
-  { label: "Amsterdam" },
-  { label: "Chicago" },
-  { label: "Vienna" },
-  { label: "Seoul" },
-];
