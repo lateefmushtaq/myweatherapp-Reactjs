@@ -7,40 +7,67 @@ import "./Card.css";
 import QuikList from "./QuickLinks";
 import Input from "./Input";
 import WeatherDisplay from "./DisplayData";
+import { useReducer } from "react";
+
+const initialState = {
+  loading: false,
+  trigger: false,
+  data: null,
+  error: null,
+  input: "",
+};
+
+const reducer = (state, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case "LOADING":
+      return { ...state, loading: true, error: null };
+    case "SUCCESS":
+      return { ...state, loading: false, data: payload, input: "" };
+    case "ERROR":
+      return { ...state, loading: false, error: payload };
+    case "SET_INPUT":
+      return { ...state, input: payload };
+    case "TRIGGER":
+      return { ...state, trigger: true };
+    case "RESET_TRIGGER":
+      return { ...state, trigger: false };
+    default:
+      throw new Error("Unknown action type");
+  }
+};
+
 export default function MyCard() {
-  const [loading, setLoading] = React.useState(false);
-  const [trigger, setTrigger] = React.useState(false);
-  const [data, setData] = React.useState(null);
-  const [error, setError] = React.useState(null);
-  const [input, setInput] = React.useState("");
-  function handleClick() {
-    setTrigger(true);
-  }
-  function onChange(e) {
-    setInput(e.target.value);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const handleClick = () => {
+    dispatch({ type: "TRIGGER" });
+  };
+
+  const onChange = (e) => {
+    dispatch({ type: "SET_INPUT", payload: e.target.value });
     console.log(e.target.value);
-  }
+  };
+
   React.useEffect(() => {
-    if (trigger === true && input) {
-      const URL = `https://api.openweathermap.org/data/2.5/weather?q=${input}&APPID=7f12b9f7637879bc79cddc5739293ac2`;
+    if (state.trigger && state.input) {
+      const URL = `https://api.openweathermap.org/data/2.5/weather?q=${state.input}&APPID=7f12b9f7637879bc79cddc5739293ac2`;
       const fetchData = async () => {
-        setLoading(true);
+        dispatch({ type: "LOADING" });
         try {
           const response = await fetch(URL);
           const data = await response.json();
-          setData(data);
-          setInput("");
+          dispatch({ type: "SUCCESS", payload: data });
         } catch (e) {
-          setError(e);
+          dispatch({ type: "ERROR", payload: e });
         } finally {
-          setLoading(false);
-          setTrigger(false);
+          dispatch({ type: "RESET_TRIGGER" });
         }
       };
 
       fetchData();
     }
-  }, [trigger, input]);
+  }, [state.trigger, state.input]);
 
   return (
     <>
@@ -49,22 +76,24 @@ export default function MyCard() {
         <Card sx={{ maxWidth: 500 }}>
           <CardContent>
             <div className="input">
-              {" "}
-              <Input value={input} onChange={onChange} />
+              <Input value={state.input} onChange={onChange} />
               <Button
-                variant={"contained"}
+                variant="contained"
                 onClick={handleClick}
                 startIcon={<SearchIcon />}
               >
-                {" "}
-                Search{" "}
+                Search
               </Button>
             </div>
           </CardContent>
         </Card>
       </div>
       <div>
-        <WeatherDisplay data={data} loading={loading} error={error} />
+        <WeatherDisplay
+          data={state.data}
+          loading={state.loading}
+          error={state.error}
+        />
       </div>
     </>
   );
